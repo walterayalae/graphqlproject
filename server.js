@@ -1,28 +1,46 @@
+
 import express from 'express';
 import graphqlHTTP from 'express-graphql';
 import Schema from './schema';
+import webpack from 'webpack';
+import WebpackDevServer from 'webpack-dev-server';
 
 
 const app = express();
 
 
-
-
-
-
-
-
 app.use('/graphql', graphqlHTTP({ schema: Schema, pretty: true, graphiql: true}));
-
-app.listen(3000, () => {
-
+app.listen(8080, () => {
 	console.log({running:true});
 });
 
 
+const compiler = webpack({
+  entry: "./index.js",
+  output: {
+    path: __dirname,
+    filename: "bundle.js",
+    publicPath: "/static/"
+  },
+  module: {
+    loaders: [
+      { test: /\.js$/, 
+        exclude: /node_modules/, 
+        loader: "babel-loader"
+      }
+    ]
+  }
+});
 
-
-
+const appServer = new WebpackDevServer(compiler, {
+ contentBase: "/public/",
+ proxy: {"/graphql": `http://localhost:${8080}`},
+ publicPath: "/static/",
+ stats: {colors: true}
+});
+appServer.use("/", express.static("static"));
+appServer.listen(3000);
+console.log("The App Server is running.");
 
 
 
