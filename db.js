@@ -67,4 +67,4 @@ Connection.sync({force: true}).then(() => {
 	});
 });
 
-
+export default Connection;
