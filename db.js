@@ -4,7 +4,7 @@ import Faker from 'faker';
 
 const Connection = new Sequelize(
 	'properties',
-	'username',
+	'walterayalae',
 	'postgres',
 	{
 		dialect: 'postgres',
